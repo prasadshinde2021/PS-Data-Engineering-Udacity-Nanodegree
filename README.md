@@ -20,6 +20,17 @@ This project is to build ETL pipeline for Sparkify:music streaming app. This bui
 | |____create_tables.py # database/table creation script
 ```
 
+## How to run python scripts
+
+Ensure you've python installed 
+
+To create database and tables run
+```python create_tables.py```
+
+To run ETL pipeline
+```python etl.py```
+
+
 
 ## Star Schema
 ```

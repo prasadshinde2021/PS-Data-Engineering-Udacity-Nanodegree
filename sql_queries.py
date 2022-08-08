@@ -9,30 +9,65 @@ time_table_drop = "DROP TABLE IF EXISTS time"
 # CREATE TABLES
 
 songplay_table_create = ("""
-CREATE TABLE IF NOT EXISTS songplays(songplay_id SERIAL PRIMARY KEY, start_time TIMESTAMP, user_id INT, level varchar, song_id varchar, artist_id varchar, session_id int, location varchar, user_agent text); 
+CREATE TABLE IF NOT EXISTS songplays(
+    songplay_id SERIAL PRIMARY KEY, 
+    start_time bigint NOT NULL, 
+    user_id INT NOT NULL, 
+    level varchar, 
+    song_id varchar, 
+    artist_id varchar, 
+    session_id int, 
+    location varchar, 
+    user_agent text
+); 
 """)
 
 user_table_create = ("""
-CREATE TABLE IF NOT EXISTS users(user_id INT PRIMARY KEY, first_name varchar, last_name varchar, gender varchar, level varchar);
+CREATE TABLE IF NOT EXISTS users(
+    user_id INT PRIMARY KEY, 
+    first_name varchar, 
+    last_name varchar, 
+    gender varchar, 
+    level varchar NOT NULL
+);
 """)
 
 song_table_create = ("""
-CREATE TABLE IF NOT EXISTS songs(song_id varchar PRIMARY KEY, title varchar NOT NULL, artist_id varchar, year int, duration numeric NOT NULL);
+CREATE TABLE IF NOT EXISTS songs(
+    song_id varchar PRIMARY KEY, 
+    title varchar NOT NULL, 
+    artist_id varchar, 
+    year int, 
+    duration numeric NOT NULL
+);
 """)
 
 artist_table_create = ("""
-CREATE TABLE IF NOT EXISTS artists(artist_id varchar PRIMARY KEY, name varchar NOT NULL, location varchar, latitude DOUBLE PRECISION, longitude DOUBLE PRECISION);
- 
+CREATE TABLE IF NOT EXISTS artists(
+    artist_id varchar PRIMARY KEY, 
+    name varchar NOT NULL, 
+    location varchar, 
+    latitude DOUBLE PRECISION, 
+    longitude DOUBLE PRECISION
+);
 """)
 
 time_table_create = ("""
-CREATE TABLE IF NOT EXISTS time (start_time TIMESTAMP PRIMARY KEY, hour int, day int, week int, month int, year int, weekday varchar); 
+CREATE TABLE IF NOT EXISTS time (
+    start_time TIME PRIMARY KEY, 
+    hour int, 
+    day int, 
+    week int, 
+    month int, 
+    year int, 
+    weekday varchar
+); 
 """)
 
 # INSERT RECORDS
 
 songplay_table_insert = (""" 
-INSERT INTO songplays(start_time, user_id, level, song_id, artist_id, session_id, location, user_agent)\
+INSERT INTO songplays (start_time, user_id, level, song_id, artist_id, session_id, location, user_agent)\
 VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
 """)
 
@@ -40,7 +75,7 @@ user_table_insert = ("""
 INSERT INTO users(user_id, first_name, last_name, gender, level)
 VALUES (%s,%s,%s,%s,%s)
 ON CONFLICT (user_id) 
-DO NOTHING
+DO UPDATE SET level = EXCLUDED.level
 """)
 
 song_table_insert = ("""
@@ -68,9 +103,6 @@ DO NOTHING
 # FIND SONGS
 #Implement the song_select query in sql_queries.py to find the song ID and artist ID based on the title, artist name, and duration of a song.
 
-#song_select = ("""
-#SELECT songs.song_id, songs.artist_id FROM songs, artists WHERE songs.artist_id=artists.artist_id AND songs.title=(%s) AND artists.name=#(%s) AND songs.duration=(%s);
-#""")
 song_select = ("""
     SELECT song_id, artists.artist_id
     FROM songs JOIN artists ON songs.artist_id = artists.artist_id
