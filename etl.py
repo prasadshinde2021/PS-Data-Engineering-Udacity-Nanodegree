@@ -41,11 +41,12 @@ def process_log_file(cur, filepath):
     t = pd.to_datetime(df['ts'], unit='ms')
     
     # insert time data records
-    t_series = pd.Series(t)
-    time_data = pd.DataFrame(list(zip(t_series.dt.time, t_series.dt.hour, t_series.dt.day, t_series.dt.week, t_series.dt.month, t_series.dt.year, t_series.dt.weekday)))
-    time_data.columns = ['Timestamp', 'Hour', 'Day','Week','Month','Year','Weekday']
-    column_labels = ('Timestamp', 'Hour', 'Day','Week','Month','Year','Weekday')
-    time_df = time_data
+    # insert time data records
+    time_data = []
+    for line in t:
+        time_data.append([line, line.hour, line.day, line.week, line.month, line.year, line.day_name()])
+    column_labels = ('start_time', 'hour', 'day', 'week', 'month', 'year', 'weekday')
+    time_df = pd.DataFrame.from_records(time_data, columns=column_labels)
 
     for i, row in time_df.iterrows():
         cur.execute(time_table_insert, list(row))
